@@ -18,7 +18,7 @@ public class Basket {
     private Long id;
 
     @OneToMany(mappedBy = "basket", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Product> products;
+    private List<BasketProduct> basketProducts;
 
     @OneToOne
     private User user;
