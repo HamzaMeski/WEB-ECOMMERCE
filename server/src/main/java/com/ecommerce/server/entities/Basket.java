@@ -12,7 +12,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name = "basket")
+@Table(name = "baskets")
 public class Basket {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
