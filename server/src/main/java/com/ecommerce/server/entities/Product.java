@@ -18,9 +18,9 @@ public class Product {
 
     private String name;
 
-    private String NutritionalValue;
+    private String nutritionalValue;
 
-    private Integer weight; // by kg
+    private Float weight; // by kg
 
     private Float price;
 }

@@ -7,6 +7,8 @@ import com.ecommerce.server.repositories.ProductRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 public class ProductService {
@@ -14,7 +16,12 @@ public class ProductService {
     private final ProductMapper productMapper;
 
     public ProductResponseDTO create(ProductRequestDTO request) {
+        return productMapper.toResponse(productRepository.save(productMapper.toEntity(request)));
+    }
 
-        return null;
+    public List<ProductResponseDTO> getProducts() {
+       return productRepository.findAll().stream()
+               .map(productMapper::toResponse)
+               .toList();
     }
 }
