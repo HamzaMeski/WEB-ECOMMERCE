@@ -13,14 +13,15 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/v1/users")
-public class UserController {
+@RequestMapping("/api/v1/auth")
+public class AuthController {
 
     private final AuthenticationService authService;
 
     @PostMapping("/login")
     public ResponseEntity<UserResponseDTO> login(
             @Valid @RequestBody AuthenticationRequest request) {
+        System.out.println("Login request received for: " + request.getEmail());
         return ResponseEntity.ok(authService.authenticate(request));
     }
 }
