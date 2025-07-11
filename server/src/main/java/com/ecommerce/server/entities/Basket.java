@@ -21,7 +21,7 @@ public class Basket {
     @OneToMany(mappedBy = "basket", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<BasketProduct> basketProducts;
 
-    @OneToOne
+    @ManyToOne
     private User user;
 
     private LocalDateTime createdAt;
