@@ -16,7 +16,7 @@ import java.util.List;
 public class ProductController {
     private final ProductService productService;
 
-    @PostMapping("/create")
+    @PostMapping()
     public ResponseEntity<ProductResponseDTO> create(
             @RequestBody ProductRequestDTO requestDTO
     ) {
@@ -27,5 +27,20 @@ public class ProductController {
     public ResponseEntity<List<ProductResponseDTO>> getProducts() {
         List<ProductResponseDTO> products = productService.getProducts();
         return ResponseEntity.ok(products);
+    }
+
+    @PutMapping("/{id}/update")
+    public ResponseEntity<ProductResponseDTO> update(
+            @PathVariable Long id,
+            @RequestBody ProductRequestDTO requestDTO
+    ) {
+        ProductResponseDTO updated = productService.update(id, requestDTO);
+        return ResponseEntity.ok(updated);
+    }
+
+    @DeleteMapping("/{id}/delete")
+    public ResponseEntity<Void> delete(@PathVariable Long id) {
+        productService.delete(id);
+        return ResponseEntity.noContent().build(); // HTTP 204
     }
 }
