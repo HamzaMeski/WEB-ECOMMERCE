@@ -112,7 +112,7 @@ const handleLogin = async () => {
       email: form.email,
       password: form.password
     })
-    router.push('/dashboard') // Redirect after successful login
+    router.push('/dashboard')
   } catch (error) {
     alert(error.response?.data?.message || error.message || 'Login failed')
   } finally {
