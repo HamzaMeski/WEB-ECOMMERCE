@@ -34,7 +34,7 @@
               placeholder="Search products..."
               class="px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
           />
-          <button class="text-gray-600 hover:text-blue-600" aria-label="Shopping Cart">
+          <button @click="openBasket" class="text-gray-600 hover:text-blue-600" aria-label="Shopping Cart">
             <ShoppingCartIcon class="w-6 h-6" />
           </button>
           <button class="text-gray-600 hover:text-blue-600" aria-label="User Profile">
@@ -48,10 +48,25 @@
         <router-view />
       </main>
     </div>
+
+    <!-- Basket popup -->
+    <BasketContent v-if="showBasket" @close="closeBasket" />
   </div>
 </template>
 
 
 <script setup>
+import { ref } from 'vue'
 import { ShoppingCartIcon, UserCircleIcon } from '@heroicons/vue/24/outline'
+import BasketContent from '@/components/base/BasketContent.vue'
+
+const showBasket = ref(false)
+
+function openBasket() {
+  showBasket.value = true
+}
+
+function closeBasket() {
+  showBasket.value = false
+}
 </script>
