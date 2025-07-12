@@ -54,7 +54,7 @@
 </template>
 
 <script setup>
-import { ref, computed, onMounted, watch } from 'vue'
+import {computed, onMounted, watch} from 'vue'
 import { useStore } from 'vuex'
 import { PlusIcon, MinusIcon } from '@heroicons/vue/24/solid'
 
@@ -64,29 +64,21 @@ const products = computed(() => store.getters['product/allProducts'])
 const loading = computed(() => store.getters['product/isLoading'])
 const error = computed(() => store.getters['product/productError'])
 
-const basket = ref([])
-
 onMounted(() => {
   store.dispatch('product/fetchProducts')
 })
 
 watch(products, (newVal) => {
-  basket.value = newVal.map(product => ({
-    ...product,
-    quantity: 0
-  }))
+  if (newVal.length > 0) {
+    store.dispatch('basket/initializeBasket', newVal)
+  }
 })
 
-// Helpers
 const getQuantity = (id) => {
-  const item = basket.value.find(p => p.id === id)
+  const item = store.getters['basket/allBasketItems'].find(p => p.id === id)
   return item ? item.quantity : 0
 }
 
-const increment = (id) => basket.value.find(p => p.id === id).quantity++
-
-const decrement = (id) => {
-  const item = basket.value.find(p => p.id === id)
-  if (item.quantity > 0) item.quantity--
-}
+const increment = (id) => store.dispatch('basket/incrementQuantity', id)
+const decrement = (id) => store.dispatch('basket/decrementQuantity', id)
 </script>
