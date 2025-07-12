@@ -1,6 +1,12 @@
 <template>
   <div class="p-6">
-    <h1 class="text-2xl font-bold mb-6 text-gray-800">Available Fruits</h1>
+    <!-- Create button -->
+    <button
+        @click="openCreatePopup"
+        class="mb-4 px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition"
+    >
+      Create Product
+    </button>
 
     <div v-if="loading" class="text-gray-500">Loading products...</div>
     <div v-if="error" class="text-red-500">Error: {{ error }}</div>
@@ -20,15 +26,22 @@
         <p class="mt-1 text-lg font-bold text-green-600">$ {{ product.price }}</p>
       </div>
     </div>
+
+
+    <!-- Popup form, visible only if showCreatePopup is true -->
+    <CreateEditProductForm v-if="showCreatePopup" @close="closeCreatePopup" />
   </div>
 </template>
 
 <script setup>
+import { ref } from 'vue'
 import { onMounted, computed } from 'vue'
 import { useStore } from 'vuex'
+import CreateEditProductForm from "@/components/base/CreateEditProductForm.vue";
 
 const store = useStore()
 
+// fetching all products
 const products = computed(() => store.getters['product/allProducts'])
 const loading = computed(() => store.getters['product/isLoading'])
 const error = computed(() => store.getters['product/productError'])
@@ -37,4 +50,13 @@ onMounted(() => {
   store.dispatch('product/fetchProducts')
 })
 
+
+// displaying createEdit popup
+const showCreatePopup = ref(false)
+function openCreatePopup() {
+  showCreatePopup.value = true
+}
+function closeCreatePopup() {
+  showCreatePopup.value = false
+}
 </script>
