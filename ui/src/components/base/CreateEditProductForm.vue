@@ -95,19 +95,30 @@
 
 <script setup>
 import { ref, defineEmits } from 'vue'
+import { useStore } from 'vuex'
 
 const emits = defineEmits(['close'])
+const store = useStore()
 
 const name = ref('')
 const nutritionalValue = ref('')
 const weight = ref(null)
 const price = ref(null)
 
-function submitForm() {
-  // TODO: Add your logic to send form data to backend or store
-  console.log({ name: name.value, nutritionalValue: nutritionalValue.value, weight: weight.value, price: price.value })
-  // After submission, close the popup
-  emits('close')
+async function submitForm() {
+  const productData = {
+    name: name.value,
+    nutritionalValue: nutritionalValue.value,
+    weight: weight.value,
+    price: price.value
+  }
+
+  try {
+    await store.dispatch('product/createProduct', productData)
+    emits('close')
+  } catch (error) {
+    alert(error.message || 'Error creating product')
+  }
 }
 
 function cancel() {
