@@ -1,4 +1,4 @@
-import { getAllProducts, createProduct } from '@/services/product.service'
+import { getAllProducts, createProduct, updateProduct } from '@/services/product.service'
 
 const state = () => ({
     products: [],
@@ -41,6 +41,20 @@ const actions = {
             dispatch('fetchProducts')
         } catch (err) {
             commit('SET_ERROR', err.message || 'Failed to create product')
+            throw err
+        } finally {
+            commit('SET_LOADING', false)
+        }
+    },
+
+    async updateProduct({ commit, dispatch }, { id, data }) {
+        commit('SET_LOADING', true)
+        try {
+            await updateProduct(id, data)
+            commit('SET_ERROR', null)
+            dispatch('fetchProducts')
+        } catch (err) {
+            commit('SET_ERROR', err.message || 'Failed to update product')
             throw err
         } finally {
             commit('SET_LOADING', false)

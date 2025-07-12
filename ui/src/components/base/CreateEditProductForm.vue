@@ -17,7 +17,9 @@
 
       <!-- Right form side -->
       <div class="md:w-1/2 p-6 flex flex-col">
-        <h2 class="text-2xl font-bold mb-6 text-green-700">Create Product</h2>
+        <h2 class="text-2xl font-bold mb-6 text-green-700">
+          {{ props.product ? 'Edit Product' : 'Create Product' }}
+        </h2>
 
         <form @submit.prevent="submitForm" class="space-y-5 flex-grow flex flex-col justify-between">
           <div>
@@ -94,16 +96,41 @@
 >
 
 <script setup>
-import { ref, defineEmits } from 'vue'
+import { ref, watch, defineEmits, defineProps } from 'vue'
 import { useStore } from 'vuex'
 
 const emits = defineEmits(['close'])
+const props = defineProps({
+  product: Object
+})
+
 const store = useStore()
 
+// Form fields
 const name = ref('')
 const nutritionalValue = ref('')
 const weight = ref(null)
 const price = ref(null)
+
+// If prop product changes, update form fields accordingly (for editing)
+watch(
+    () => props.product,
+    (newProduct) => {
+      if (newProduct) {
+        name.value = newProduct.name || ''
+        nutritionalValue.value = newProduct.nutritionalValue || ''
+        weight.value = newProduct.weight || null
+        price.value = newProduct.price || null
+      } else {
+        // Clear form when no product passed (create mode)
+        name.value = ''
+        nutritionalValue.value = ''
+        weight.value = null
+        price.value = null
+      }
+    },
+    { immediate: true }
+)
 
 async function submitForm() {
   const productData = {
@@ -114,10 +141,16 @@ async function submitForm() {
   }
 
   try {
-    await store.dispatch('product/createProduct', productData)
+    if (props.product && props.product.id) {
+      // Edit mode — update existing product
+      await store.dispatch('product/updateProduct', { id: props.product.id, data: productData })
+    } else {
+      // Create mode — add new product
+      await store.dispatch('product/createProduct', productData)
+    }
     emits('close')
   } catch (error) {
-    alert(error.message || 'Error creating product')
+    alert(error.message || 'Error saving product')
   }
 }
 
