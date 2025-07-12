@@ -2,8 +2,8 @@ import { createRouter, createWebHistory } from 'vue-router'
 
 import DashboardLayout from '@/components/layouts/DashboardLayout.vue'
 import AuthLayout from '@/components/layouts/AuthLayout.vue'
-import ClientSection from "@/components/sections/dashboard/ClientSection.vue";
 import ManagerSection from "@/components/sections/dashboard/ManagerSection.vue";
+import ClientSection from "@/components/sections/dashboard/ClientSection.vue";
 
 const routes = [
     {

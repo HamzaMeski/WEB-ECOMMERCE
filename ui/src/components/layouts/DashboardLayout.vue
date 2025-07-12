@@ -1,3 +1,4 @@
+
 <template>
   <div class="flex h-screen overflow-hidden">
     <!-- Sidebar -->
@@ -33,16 +34,11 @@
               placeholder="Search products..."
               class="px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
           />
-          <button class="text-gray-600 hover:text-blue-600">
-            <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-              <path d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-1.5 6h13l-1.5-6M10 21a1 1 0 100-2 1 1 0 000 2zm8 0a1 1 0 100-2 1 1 0 000 2z"/>
-            </svg>
+          <button class="text-gray-600 hover:text-blue-600" aria-label="Shopping Cart">
+            <ShoppingCartIcon class="w-6 h-6" />
           </button>
-          <button class="text-gray-600 hover:text-blue-600">
-            <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-              <path d="M5.121 17.804A11.955 11.955 0 0112 15c2.09 0 4.078.537 5.879 1.485M15 10a3 3 0 11-6 0 3 3 0 016 0z"/>
-              <path d="M4 4h16v16H4z" stroke="none"/>
-            </svg>
+          <button class="text-gray-600 hover:text-blue-600" aria-label="User Profile">
+            <UserCircleIcon class="w-6 h-6" />
           </button>
         </div>
       </header>
@@ -55,5 +51,7 @@
   </div>
 </template>
 
-<script setup lang="ts">
+
+<script setup>
+import { ShoppingCartIcon, UserCircleIcon } from '@heroicons/vue/24/outline'
 </script>
