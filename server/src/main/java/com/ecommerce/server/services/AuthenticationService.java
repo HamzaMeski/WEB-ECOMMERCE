@@ -1,6 +1,7 @@
 package com.ecommerce.server.services;
 
 import com.ecommerce.server.dtos.user.AuthenticationRequest;
+import com.ecommerce.server.dtos.user.UserRequestDTO;
 import com.ecommerce.server.dtos.user.UserResponseDTO;
 import com.ecommerce.server.entities.User;
 import com.ecommerce.server.exception.AuthenticationException;
@@ -15,6 +16,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -26,6 +28,7 @@ public class AuthenticationService {
     private final JwtService jwtService;
     private final UserRepository userRepository;
     private final AuthMapper authMapper;
+    private final PasswordEncoder passwordEncoder;
 
     public UserResponseDTO authenticate(AuthenticationRequest request) {
 
@@ -56,9 +59,17 @@ public class AuthenticationService {
                 .token(token)
                 .id(user.getId())
                 .email(user.getEmail())
-                .firstName(user.getFirstName())
-                .lastName(user.getLastName())
+                .fullName(user.getFullName())
                 .build();
+    }
+
+    public void register(UserRequestDTO request) {
+        User user = User.builder()
+                .fullName(request.getFullName())
+                .email(request.getEmail())
+                .password(passwordEncoder.encode(request.getPassword()))
+                .build();
+        userRepository.save(user);
     }
 
     public UserResponseDTO getAuthenticatedUser() {

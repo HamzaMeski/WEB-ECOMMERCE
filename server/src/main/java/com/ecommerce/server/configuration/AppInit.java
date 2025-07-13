@@ -27,8 +27,7 @@ public class AppInit implements CommandLineRunner {
                     User user = User.builder()
                             .email(email)
                             .password(passwordEncoder.encode(rawPassword))
-                            .firstName("Hamza")
-                            .lastName("Init")
+                            .fullName("Hamza Init")
                             .build();
                     userRepository.save(user);
                     System.out.println("User created: " + email);
