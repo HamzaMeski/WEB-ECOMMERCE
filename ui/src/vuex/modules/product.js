@@ -32,10 +32,10 @@ const actions = {
         }
     },
 
-    async createProduct({ commit, dispatch }, productData) {
+    async createProduct({ commit, dispatch }, { data, image }) {
         commit('SET_LOADING', true)
         try {
-            await createProduct(productData)
+            await createProduct(data, image)
             commit('SET_ERROR', null)
             // Refresh product list after successful creation
             dispatch('fetchProducts')
@@ -47,10 +47,10 @@ const actions = {
         }
     },
 
-    async updateProduct({ commit, dispatch }, { id, data }) {
+    async updateProduct({ commit, dispatch }, { id, data, image }) {
         commit('SET_LOADING', true)
         try {
-            await updateProduct(id, data)
+            await updateProduct(id, data, image)
             commit('SET_ERROR', null)
             dispatch('fetchProducts')
         } catch (err) {

@@ -73,6 +73,37 @@
             />
           </div>
 
+          <!-- Image upload field -->
+          <div>
+            <label class="block text-gray-700 mb-1" for="image">Product Image</label>
+            <input
+                id="image"
+                type="file"
+                accept="image/*"
+                @change="handleImageChange"
+                class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-400"
+                :required="!props.product"
+            />
+            <p v-if="selectedImage" class="text-sm text-gray-600 mt-1">
+              Selected: {{ selectedImage.name }}
+            </p>
+            <p v-else-if="props.product && !selectedImage" class="text-sm text-gray-500 mt-1">
+              Leave empty to keep current image
+            </p>
+          </div>
+
+          <!-- Image preview -->
+          <div v-if="imagePreview || (props.product && props.product.imageUrl && !selectedImage)" class="mt-4">
+            <label class="block text-gray-700 mb-1">
+              {{ selectedImage ? 'New Image Preview' : 'Current Image' }}
+            </label>
+            <img
+                :src="imagePreview || props.product.imageUrl"
+                alt="Preview"
+                class="w-32 h-32 object-cover rounded border"
+            />
+          </div>
+
           <div class="flex justify-end space-x-3 mt-4">
             <button
                 type="button"
@@ -83,9 +114,10 @@
             </button>
             <button
                 type="submit"
-                class="px-5 py-2 bg-green-600 text-white rounded hover:bg-green-700 transition"
+                :disabled="loading"
+                class="px-5 py-2 bg-green-600 text-white rounded hover:bg-green-700 transition disabled:opacity-50"
             >
-              Save
+              {{ loading ? 'Saving...' : 'Save' }}
             </button>
           </div>
         </form>
@@ -93,8 +125,6 @@
     </div>
   </div>
 </template>
-
-
 
 <script setup>
 import { ref, watch, defineEmits, defineProps } from 'vue'
@@ -112,6 +142,9 @@ const name = ref('')
 const nutritionalValue = ref('')
 const weight = ref(null)
 const price = ref(null)
+const selectedImage = ref(null)
+const imagePreview = ref(null)
+const loading = ref(false)
 
 // If prop product changes, update form fields accordingly (for editing)
 watch(
@@ -122,18 +155,46 @@ watch(
         nutritionalValue.value = newProduct.nutritionalValue || ''
         weight.value = newProduct.weight || null
         price.value = newProduct.price || null
+        // Clear image selection when editing (user can choose new image if desired)
+        selectedImage.value = null
+        imagePreview.value = null
       } else {
         // Clear form when no product passed (create mode)
         name.value = ''
         nutritionalValue.value = ''
         weight.value = null
         price.value = null
+        selectedImage.value = null
+        imagePreview.value = null
       }
     },
     { immediate: true }
 )
 
+function handleImageChange(event) {
+  const file = event.target.files[0]
+  if (file) {
+    selectedImage.value = file
+
+    // Create preview
+    const reader = new FileReader()
+    reader.onload = (e) => {
+      imagePreview.value = e.target.result
+    }
+    reader.readAsDataURL(file)
+  } else {
+    selectedImage.value = null
+    imagePreview.value = null
+  }
+}
+
 async function submitForm() {
+  // Validate image for new products
+  if (!props.product && !selectedImage.value) {
+    alert('Please select an image for the product')
+    return
+  }
+
   const productData = {
     name: name.value,
     nutritionalValue: nutritionalValue.value,
@@ -141,17 +202,28 @@ async function submitForm() {
     price: price.value
   }
 
+  loading.value = true
+
   try {
     if (props.product && props.product.id) {
       // Edit mode — update existing product
-      await store.dispatch('product/updateProduct', { id: props.product.id, data: productData })
+      await store.dispatch('product/updateProduct', {
+        id: props.product.id,
+        data: productData,
+        image: selectedImage.value // null if no new image selected
+      })
     } else {
       // Create mode — add new product
-      await store.dispatch('product/createProduct', productData)
+      await store.dispatch('product/createProduct', {
+        data: productData,
+        image: selectedImage.value
+      })
     }
     emits('close')
   } catch (error) {
     alert(error.message || 'Error saving product')
+  } finally {
+    loading.value = false
   }
 }
 
