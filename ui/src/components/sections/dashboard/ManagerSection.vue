@@ -22,7 +22,6 @@
               :src="getProductImageUrl(product.id)"
               :alt="product.name"
               class="w-full h-40 object-cover rounded-md"
-              @error="handleImageError"
           />
         </div>
         <h2 class="text-xl font-semibold text-gray-800">{{ product.name }}</h2>
@@ -93,20 +92,15 @@ function getProductImageUrl(productId) {
   return productImages.value[productId] || '/images/fruits.png'
 }
 
-// Handle image loading errors
-function handleImageError(event) {
-  event.target.src = '/images/fruits.png' // fallback to default image
-}
-
 // Open popup for creating new product
 function openCreatePopup() {
-  selectedProduct.value = null // clear any selected product
+  selectedProduct.value = null
   showCreatePopup.value = true
 }
 
 // Open popup for editing existing product
 function openEditPopup(product) {
-  selectedProduct.value = { ...product } // clone product to avoid direct mutations
+  selectedProduct.value = { ...product }
   showCreatePopup.value = true
 }
 

@@ -14,7 +14,7 @@
       >
         <div class="mb-3">
           <img
-              src="/images/fruits.png"
+              :src="getProductImageUrl(product.id)"
               :alt="product.name"
               class="w-full h-40 object-cover rounded-md"
           />
@@ -54,9 +54,10 @@
 </template>
 
 <script setup>
-import {computed, onMounted, watch} from 'vue'
+import {computed, onMounted, ref, watch} from 'vue'
 import { useStore } from 'vuex'
 import { PlusIcon, MinusIcon } from '@heroicons/vue/24/solid'
+import { getImage } from '@/services/image.service'
 
 const store = useStore()
 
@@ -64,15 +65,34 @@ const products = computed(() => store.getters['product/allProducts'])
 const loading = computed(() => store.getters['product/isLoading'])
 const error = computed(() => store.getters['product/productError'])
 
+const productImages = ref({})
+
 onMounted(() => {
   store.dispatch('product/fetchProducts')
 })
 
-watch(products, (newVal) => {
+watch(products, async (newVal) => {
   if (newVal.length > 0) {
     store.dispatch('basket/initializeBasket', newVal)
+
+    for (const product of newVal) {
+      if (product.imageId && !productImages.value[product.id]) {
+        try {
+          const imageBlob = await getImage(product.imageId)
+          productImages.value[product.id] = URL.createObjectURL(imageBlob)
+        } catch (error) {
+          console.error(`Error loading image for product ${product.id}:`, error)
+          productImages.value[product.id] = '/images/fruits.png'
+        }
+      }
+    }
   }
 })
+
+// Get image URL for a product
+function getProductImageUrl(productId) {
+  return productImages.value[productId] || '/images/fruits.png'
+}
 
 const getQuantity = (id) => {
   const item = store.getters['basket/allBasketItems'].find(p => p.id === id)
