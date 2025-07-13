@@ -24,5 +24,7 @@ public class Product {
 
     private Float price;
 
-    
+    @OneToOne
+    @JoinColumn(name = "image_id")
+    private Image image;
 }

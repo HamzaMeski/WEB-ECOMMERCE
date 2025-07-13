@@ -25,7 +25,7 @@ public class ImageService {
 
     // Constructor injection of upload path from config
     public ImageService(ImageRepository imageRepository,
-                        @Value("${application.upload.dir}") String uploadPath) {
+                        @Value("${application.uploads.dir}") String uploadPath) {
         this.imageRepository = imageRepository;
         this.uploadDir = Paths.get(uploadPath);
     }

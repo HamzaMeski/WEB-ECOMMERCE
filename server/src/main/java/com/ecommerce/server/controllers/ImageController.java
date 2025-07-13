@@ -18,7 +18,6 @@ import java.io.IOException;
 public class ImageController {
     private final ImageService imageService;
 
-
     @PostMapping
     public ResponseEntity<Image> saveImage(
             @RequestParam("file") MultipartFile file
