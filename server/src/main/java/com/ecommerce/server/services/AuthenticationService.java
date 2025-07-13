@@ -1,22 +1,15 @@
 package com.ecommerce.server.services;
 
 import com.ecommerce.server.dtos.user.AuthenticationRequest;
-import com.ecommerce.server.dtos.user.UserRequestDTO;
 import com.ecommerce.server.dtos.user.UserResponseDTO;
 import com.ecommerce.server.entities.User;
 import com.ecommerce.server.exception.AuthenticationException;
-import com.ecommerce.server.mappers.AuthMapper;
 import com.ecommerce.server.repositories.UserRepository;
 import com.ecommerce.server.security.JwtService;
-import com.ecommerce.server.security.UserPrincipal;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -27,8 +20,6 @@ public class AuthenticationService {
     private final AuthenticationManager authenticationManager;
     private final JwtService jwtService;
     private final UserRepository userRepository;
-    private final AuthMapper authMapper;
-    private final PasswordEncoder passwordEncoder;
 
     public UserResponseDTO authenticate(AuthenticationRequest request) {
 
@@ -61,31 +52,5 @@ public class AuthenticationService {
                 .email(user.getEmail())
                 .fullName(user.getFullName())
                 .build();
-    }
-
-    public void register(UserRequestDTO request) {
-        User user = User.builder()
-                .fullName(request.getFullName())
-                .email(request.getEmail())
-                .password(passwordEncoder.encode(request.getPassword()))
-                .build();
-        userRepository.save(user);
-    }
-
-    public UserResponseDTO getAuthenticatedUser() {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-
-        UserPrincipal userPrincipal = (UserPrincipal) authentication.getPrincipal();
-        Long userId = userPrincipal.getId();
-
-        String role = authentication.getAuthorities()
-                .stream()
-                .findFirst()
-                .map(GrantedAuthority::getAuthority)
-                .orElse(null);
-
-       User user = userRepository.findById(userId)
-                .orElseThrow();
-       return authMapper.toResponse(user);
     }
 }

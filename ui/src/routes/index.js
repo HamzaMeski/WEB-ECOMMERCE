@@ -4,6 +4,7 @@ import DashboardLayout from '@/components/layouts/DashboardLayout.vue'
 import AuthLayout from '@/components/layouts/AuthLayout.vue'
 import ManagerSection from "@/components/sections/dashboard/ManagerSection.vue";
 import ClientSection from "@/components/sections/dashboard/ClientSection.vue";
+import ProfileSection from "@/components/sections/auth/ProfileSection.vue";
 
 const routes = [
     {
@@ -23,6 +24,10 @@ const routes = [
                 component: ManagerSection
             }
         ]
+    },
+    {
+        path: '/profile',
+        component: ProfileSection
     }
 ]
 

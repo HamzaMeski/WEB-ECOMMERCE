@@ -1,17 +1,12 @@
 package com.ecommerce.server.controllers;
 
 import com.ecommerce.server.dtos.user.AuthenticationRequest;
-import com.ecommerce.server.dtos.user.UserRequestDTO;
 import com.ecommerce.server.dtos.user.UserResponseDTO;
 import com.ecommerce.server.services.AuthenticationService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
@@ -19,14 +14,6 @@ import org.springframework.web.bind.annotation.RestController;
 public class AuthController {
 
     private final AuthenticationService authService;
-
-    @PostMapping("/register")
-    public ResponseEntity<Void> register(
-            @Valid @RequestBody UserRequestDTO request
-    ) {
-        authService.register(request);
-        return new ResponseEntity<>(HttpStatus.CREATED);
-    }
 
     @PostMapping("/login")
     public ResponseEntity<UserResponseDTO> login(

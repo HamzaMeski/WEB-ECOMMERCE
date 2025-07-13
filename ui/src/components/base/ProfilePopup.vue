@@ -2,9 +2,9 @@
   <!-- Overlay -->
   <div class="fixed inset-0 z-50 p-4">
     <!-- Modal -->
-    <div class="fixed bg-white rounded-xl shadow-2xl w-full max-w-sm p-6 space-y-6 top-20 right-4">
+    <div class="fixed bg-white rounded-xl shadow-2xl w-full max-w-sm p-6 space-y-6 top-20 right-4 ">
 
-      <!-- Cancel/Close button -->
+      <!-- Cancel/Close button as router-link -->
       <button
           @click="$emit('close')"
           class="absolute top-3 right-3 text-gray-400 hover:text-gray-600 transition"
@@ -23,7 +23,7 @@
       <div class="space-y-4">
         <!-- Profile Management -->
         <router-link
-            to="/dashboard/profile"
+            to="/profile"
             class="w-full flex items-center gap-3 px-4 py-2 text-gray-700 hover:bg-blue-50 rounded-md transition"
         >
           <UserIcon class="w-5 h-5 text-blue-500" />

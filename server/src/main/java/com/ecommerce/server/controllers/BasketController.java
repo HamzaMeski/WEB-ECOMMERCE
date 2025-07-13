@@ -5,6 +5,7 @@ import com.ecommerce.server.security.CurrentUser;
 import com.ecommerce.server.security.UserPrincipal;
 import com.ecommerce.server.services.BasketService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/api/v1/baskets")
 @RequiredArgsConstructor
+@Slf4j
 public class BasketController {
 
     private final BasketService basketService;
@@ -24,6 +26,8 @@ public class BasketController {
             @RequestBody BasketRequestDTO request,
             @CurrentUser UserPrincipal authUser
             ) {
+
+        log.info("uuuser id: ", authUser.getId());
         basketService.create(request, authUser.getId());
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }

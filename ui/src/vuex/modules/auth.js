@@ -1,4 +1,4 @@
-import { login, register } from '@/services/auth.service'
+import { login, register, getProfile } from '@/services/auth.service'
 
 const state = () => ({
     user: null,
@@ -22,12 +22,14 @@ const mutations = {
         state.token = null
         state.user = null
         state.error = null
+    },
+    SET_USER(state, user) {
+        state.user = user
     }
 }
 
 const actions = {
     async login({ commit }, { email, password }) {
-        console.log('dispatching login action...')
         commit('SET_LOADING', true)
         commit('SET_ERROR', null)
 
@@ -54,7 +56,6 @@ const actions = {
     },
 
     async register({ commit }, payload) {
-        console.log('dispatching register action...')
         commit('SET_LOADING', true)
         commit('SET_ERROR', null)
 
@@ -74,6 +75,23 @@ const actions = {
             return true
         } catch (error) {
             commit('SET_ERROR', error.response?.data?.message || 'Registration failed')
+            throw error
+        } finally {
+            commit('SET_LOADING', false)
+        }
+    },
+
+    async getProfile({ commit }) {
+        commit('SET_LOADING', true)
+        commit('SET_ERROR', null)
+
+        try {
+            const data = await getProfile()
+            console.log('PROFILE: ', data)
+            commit('SET_USER', data)
+            return true
+        } catch (error) {
+            commit('SET_ERROR', error.response?.data?.message || 'Failed to fetch profile')
             throw error
         } finally {
             commit('SET_LOADING', false)
