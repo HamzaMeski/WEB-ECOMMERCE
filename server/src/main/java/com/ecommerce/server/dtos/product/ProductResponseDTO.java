@@ -11,5 +11,6 @@ public class ProductResponseDTO {
     private String nutritionalValue;
     private Float weight; // by kg
     private Float price;
+    private Long imageId;
 }
 

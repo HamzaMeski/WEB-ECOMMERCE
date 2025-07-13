@@ -37,7 +37,6 @@ const actions = {
         try {
             await createProduct(data, image)
             commit('SET_ERROR', null)
-            // Refresh product list after successful creation
             dispatch('fetchProducts')
         } catch (err) {
             commit('SET_ERROR', err.message || 'Failed to create product')
