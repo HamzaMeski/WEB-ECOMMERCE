@@ -81,7 +81,7 @@
           <button @click="openBasket" class="text-gray-600 hover:text-blue-600" aria-label="Shopping Cart">
             <ShoppingCartIcon class="w-6 h-6" />
           </button>
-          <button class="text-gray-600 hover:text-blue-600" aria-label="User Profile">
+          <button @click="openProfilePopup" class="text-gray-600 hover:text-blue-600" aria-label="User Profile">
             <UserCircleIcon class="w-6 h-6" />
           </button>
         </div>
@@ -95,6 +95,9 @@
 
     <!-- Basket popup -->
     <BasketContent v-if="showBasket" @close="closeBasket" />
+
+    <!-- ProfilePopup popup -->
+    <ProfilePopup v-if="showProfilePopup" @close="closeProfilePopup" />
   </div>
 </template>
 
@@ -104,14 +107,23 @@ import { ref } from 'vue'
 import { ShoppingCartIcon, UserCircleIcon } from '@heroicons/vue/24/outline'
 import BasketContent from '@/components/base/BasketContent.vue'
 import { HomeIcon, Cog6ToothIcon, BeakerIcon, CakeIcon, CubeIcon } from '@heroicons/vue/24/outline'
+import ProfilePopup from "@/components/base/ProfilePopup.vue";
 
+// BasketContent popup
 const showBasket = ref(false)
-
 function openBasket() {
   showBasket.value = true
 }
-
 function closeBasket() {
   showBasket.value = false
+}
+
+// ProfilePopup popup
+const showProfilePopup = ref(false)
+function openProfilePopup() {
+  showProfilePopup.value = true
+}
+function closeProfilePopup() {
+  showProfilePopup.value = false
 }
 </script>
