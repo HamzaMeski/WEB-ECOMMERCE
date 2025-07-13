@@ -45,8 +45,14 @@
 
 <script setup>
 import { UserIcon, ArrowRightOnRectangleIcon, XMarkIcon } from '@heroicons/vue/24/outline'
+import { useStore } from 'vuex'
+import { useRouter } from 'vue-router'
 
-function logout() {
+const store = useStore()
+const router = useRouter()
 
+const logout =  async () => {
+  await store.dispatch('auth/logout')
+  router.replace('/')
 }
 </script>

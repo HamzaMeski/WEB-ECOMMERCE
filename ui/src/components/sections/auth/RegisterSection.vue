@@ -5,6 +5,10 @@
       <p class="text-gray-600">Join us and start your reading journey</p>
     </div>
 
+    <div v-if="successMessage" class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative">
+      {{ successMessage }}
+    </div>
+
     <form @submit.prevent="handleRegister" class="space-y-5">
       <!-- Full Name Input -->
       <div>
@@ -144,17 +148,20 @@
 
 <script setup>
 import { ref, reactive, computed } from 'vue'
+import { useStore } from 'vuex'
+
+const store = useStore()
 
 const loading = ref(false)
 const showPassword = ref(false)
 const showConfirmPassword = ref(false)
+const successMessage = ref('')
 
 const form = reactive({
   fullName: '',
   email: '',
   password: '',
   confirmPassword: '',
-  areaOfInterest: '',
   agreeToTerms: false
 })
 
@@ -165,22 +172,36 @@ const isFormValid = computed(() => {
       form.confirmPassword &&
       form.password === form.confirmPassword &&
       form.password.length >= 8 &&
-      form.areaOfInterest &&
       form.agreeToTerms
 })
 
 const handleRegister = async () => {
   loading.value = true
+  successMessage.value = ''
+
+  const payload = {
+    fullName: form.fullName,
+    email: form.email,
+    password: form.password
+  }
 
   try {
-    // Simulate API call
-    await new Promise(resolve => setTimeout(resolve, 1000))
+    await store.dispatch('auth/register', payload)
 
-    console.log('Register form submitted:', form)
-    // Handle registration logic here
+    // Show success message
+    successMessage.value = 'Account created successfully!'
+    setTimeout(() => {
+      successMessage.value = ''
+    }, 5000)
 
+    // Reset form
+    form.fullName = ''
+    form.email = ''
+    form.password = ''
+    form.confirmPassword = ''
+    form.agreeToTerms = false
   } catch (error) {
-    console.error('Registration error:', error)
+    console.error('Registration failed:', error)
   } finally {
     loading.value = false
   }
