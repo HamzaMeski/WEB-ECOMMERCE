@@ -23,4 +23,6 @@ public class Product {
     private Float weight; // by kg
 
     private Float price;
+
+    
 }
