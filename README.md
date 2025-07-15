@@ -1,4 +1,4 @@
-1.to run backend project make sure to update the youar db credentials in resources.yml, then run 
+1.to run backend project make sure to update the your db credentials in resources.yml, then run 
 ```
 #mvn spring-boot:run
 ```
